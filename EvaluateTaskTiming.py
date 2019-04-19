@@ -7,7 +7,7 @@ Reads timing files (.1D) from AFNI or design (.mat) or timing (3-column .txt)
 files from FSL and evaluates them using 4 different metrics: 
 1) Mean square off-diagonal correlation between event regressors
 2) Flatness of scree plot (normalized SVD eigenvalues of event regressor matrix)
-3) Experimental Design Efficiency (based on Smith, 2007, eq. (2)
+3) Experimental Design Efficiency (based on Henson, 2007, eq. (15.4)
 4) BOLD Signal Change Required for Significance at specified alpha value 
     (based on Smith, 2007, eq. (5)
 Outputs the results as figures and a single-row text file for comparison across
@@ -16,6 +16,8 @@ task designs.
 See python EvaluateTaskTiming.py -h for usage and input information.
 
 References:
+* Henson, R. (2007). Efficient experimental design for fMRI. Statistical 
+  parametric mapping: The analysis of functional brain images, 193-210.
 * Smith SM, Jenkinson M, Beckmann C, Miller K,
   Woolrich M. Meaningful design and contrast estimability
   in FMRI. Neuroimage 2007;34(1):127-36.
@@ -27,6 +29,7 @@ Updated 3/11/19 by DJ - renamed file, commented code
 Updated 3/21/19 by DJ - added high-pass filtering of data
 Updated 4/3/19 by DJ - added parent function callable from Python (not command line)
 Updated 4/4/19 by DJ - added tight layout to plots to avoid overlapping labels
+Updated 4/18/19 by DJ - changed efficiency metric to match Henson, 2007
 """
 
 # ==== Import packages ==== #
@@ -428,8 +431,8 @@ def PalmPartition(M,C,meth):
 
 def GetDesignEfficiency(M,C):
     """ Get the efficiency of an experimental design given a contrast. Our
-    Efficiency metric is a simplified version of Appendix B from Smith, 2007:
-        E = (C'(M'M)C)^-0.5
+    Efficiency metric is from Henson, 2007 equation 15.4:
+        E = (C'(M'M)^-1 C)^-1
     
     Usage:
     e = GetDesignEfficiency(M,C)
@@ -442,9 +445,8 @@ def GetDesignEfficiency(M,C):
     - e    : Efficiency of design in estimating each contrast
     
     References: 
-     * Smith SM, Jenkinson M, Beckmann C, Miller K,
-       Woolrich M. Meaningful design and contrast estimability
-       in FMRI. Neuroimage 2007;34(1):127-36.
+     * Henson, R. (2007). Efficient experimental design for fMRI. Statistical 
+       parametric mapping: The analysis of functional brain images, 193-210.
     
     """
     
@@ -460,8 +462,8 @@ def GetDesignEfficiency(M,C):
         C = C.reshape(C.shape[0:2])
         
     # Calculate efficiency
-    # E = (C'(M'M)C)^-0.5
-    e = np.power( np.diagonal( np.matmul(np.matmul(C.T, np.matmul(M.T, M)), C)), -0.5)
+    # E = (C'(M'M)^-1 C)^-1
+    e = np.power( np.diagonal( np.matmul(np.matmul(C.T, np.linalg.pinv(np.matmul(M.T, M)) ), C)), -1)
     
     # Return result
     return e
