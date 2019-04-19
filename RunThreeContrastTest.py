@@ -21,7 +21,7 @@ from EvaluateTaskTiming import EvaluateTaskTiming
 afniDir='/Users/jangrawdc/abin' # modify to point to AFNI directory on your computer!
 
 
-# %% 2 Block types of varying duration (Smith, 2007; Fig. 5)
+# %% 2 Block types of varying duration (Smith, 2007; Fig. 4)
 
 # Declare constants to match (Smith, 2007)
 tStim = 30; # duration of each block
