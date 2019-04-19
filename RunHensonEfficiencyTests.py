@@ -27,6 +27,8 @@ afniDir='/Users/jangrawdc/abin' # modify to point to AFNI directory on your comp
 # Specify where images should be saved
 outDir='HensonEfficiencyTest' 
 
+effScale = 40 # E is unitless, so rescale values to match paper 
+
 # %% TEST #1 (Figure 15.10)
 
 # Set up task timing for various designs
@@ -44,7 +46,7 @@ labels = ['fixed deterministic','stationary stochastic','dynamic stochastic (rap
           'dynamic stochastic (intermediate)','dynamic stochastic (slow)','variable deterministic']
 
 # Plot task designs
-plt.figure(620,figsize=(12,5), dpi= 80, facecolor='w', edgecolor='k');
+plt.figure(1510,figsize=(8,12), dpi= 80, facecolor='w', edgecolor='k');
 plt.clf();
 for i in range(nDesigns):
     plt.subplot(nDesigns,2,i*2+1)
@@ -92,10 +94,10 @@ for i in range(nDesigns):
 
         # Add results 
         if np.array_equal(np.unique(pEvent[:,i]), np.array([0,1])): # if deterministic...
-            designEfficiency[i,:] = E[0]; # fill in the whole row
+            designEfficiency[i,:] = E[0]*effScale; # fill in the whole row
             break                   # and stop, we only need to do this once
         else:
-            designEfficiency[i,j] = E[0];
+            designEfficiency[i,j] = E[0]*effScale;
 
 # clean up
 os.remove("01_ev1.1D")
@@ -130,7 +132,7 @@ filterOrder = 5
 C = np.array([1,0]) # contrast matrix
 
 # Set up figure
-plt.figure(633,figsize=(12,8), dpi= 80, facecolor='w', edgecolor='k');
+plt.figure(1512,figsize=(12,8), dpi= 80, facecolor='w', edgecolor='k');
 plt.clf();
 
 # Set up output matrices
@@ -190,7 +192,7 @@ for i in range(nDesigns):
     
     # Convolve event times with HRF and sample at TRs
     Nvols = int(runTime*nRuns/TR);
-    design,_ = ConvolveHRF(allTimings,Nvols,TR,microtime=0.1,eventTypes=evNames);
+    design,_ = ConvolveHRF(allTimings,Nvols,TR,eventTypes=evNames);
     M = design[:,:-1] # exclude constant term
     
     # Plot design        
@@ -217,7 +219,7 @@ for i in range(nDesigns):
     corrVal = np.corrcoef(Mfilt[:,0],Mfilt[:,1])
 
     # store values
-    allEff[i] = E[0]*4000 # E is unitless, so rescale to match paper
+    allEff[i] = E[0]*effScale # E is unitless, so rescale to match paper
     allCorr[i] = corrVal[0,1] # store correlation between the two (upper-right value)
 
 
@@ -271,7 +273,7 @@ epochTimes = np.array([40,120])
 epochDur = 40
 
 # Set up figure
-plt.figure(634,figsize=(12,8), dpi= 80, facecolor='w', edgecolor='k');
+plt.figure(1513,figsize=(8,8), dpi= 80, facecolor='w', edgecolor='k');
 plt.clf();
 
 # Set up output matrices
@@ -321,7 +323,7 @@ for i in range(nDesigns):
     
     # Convolve event times with HRF and sample at TRs
     Nvols = int(runTime*nRuns/TR);
-    design,_ = ConvolveHRF(allTimings,Nvols,TR,microtime=0.1,eventTypes=evNames);
+    design,_ = ConvolveHRF(allTimings,Nvols,TR,eventTypes=evNames);
     M = design[:,:-1] # exclude constant term
     
     # Plot design        
@@ -348,7 +350,7 @@ for i in range(nDesigns):
     corrVal = np.corrcoef(Mfilt[:,0],Mfilt[:,1])
 
     # store values
-    allEff[i] = E[0]*4000 # E is unitless, so rescale to match paper's order of magnitude
+    allEff[i] = E[0]*effScale # E is unitless, so rescale to match paper's order of magnitude
     allCorr[i] = corrVal[0,1] # store correlation between the two (upper-right value)
 
 

@@ -29,7 +29,8 @@ Updated 3/11/19 by DJ - renamed file, commented code
 Updated 3/21/19 by DJ - added high-pass filtering of data
 Updated 4/3/19 by DJ - added parent function callable from Python (not command line)
 Updated 4/4/19 by DJ - added tight layout to plots to avoid overlapping labels
-Updated 4/18/19 by DJ - changed efficiency metric to match Henson, 2007
+Updated 4/18/19 by DJ - changed efficiency metric to match Henson, 2007, 
+  changed default microtime to 1.
 """
 
 # ==== Import packages ==== #
@@ -206,11 +207,11 @@ def ConvertToTimecourses(timings, Nvols, TR, microtime=0.1, eventTypes=[]):
     return design,eventTypes
 
 
-def ConvolveHRF(timings, Nvols, TR, microtime=0.1, eventTypes=[]):
+def ConvolveHRF(timings, Nvols, TR, microtime=1., eventTypes=[]):
     """ Create an event matrix from event timings and convolve it with an HRF.
     
     Usage:
-    design,eventTypes = ConvolveHRF(timings, Nvols, TR, microtime=0.1, eventTypes=[])
+    design,eventTypes = ConvolveHRF(timings, Nvols, TR, microtime=1., eventTypes=[])
     
     Inputs:
     - timings : Design matrix, to be partitioned. Row = time, col = EV
