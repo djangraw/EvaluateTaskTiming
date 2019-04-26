@@ -14,6 +14,7 @@ References:
 
 -Created 4/18/19 by DJ.
 -Updated 4/19/19 by DJ - implemented tests for Henson Figures 15.12 and 15.13.
+-Updated 4/26/19 by DJ - changed EvaluateTaskTiming.py name to effigenia
 """
 
 # %% Import Packages
@@ -21,8 +22,7 @@ import numpy as np
 import pandas as pd
 import os
 from matplotlib import pyplot as plt
-from EvaluateTaskTiming import EvaluateTaskTiming
-from EvaluateTaskTiming import LoadAfniTimingFile, ConvolveHRF, ApplyButterFilter, GetDesignEfficiency
+from effigenia import EvaluateTaskTiming, LoadAfniTimingFile, ConvolveHRF, ApplyButterFilter, GetDesignEfficiency
 afniDir='/Users/jangrawdc/abin' # modify to point to AFNI directory on your computer!
 # Specify where images should be saved
 outDir='HensonEfficiencyTest' 

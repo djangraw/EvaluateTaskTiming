@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
-EvaluateTaskTiming.py
+effigenia
 
 Reads timing files (.1D) from AFNI or design (.mat) or timing (3-column .txt) 
 files from FSL and evaluates them using 4 different metrics: 
@@ -13,7 +13,7 @@ files from FSL and evaluates them using 4 different metrics:
 Outputs the results as figures and a single-row text file for comparison across
 task designs.
 
-See python EvaluateTaskTiming.py -h for usage and input information.
+See python effigenia -h for usage and input information.
 
 References:
 * Henson, R. (2007). Efficient experimental design for fMRI. Statistical 
@@ -31,6 +31,7 @@ Updated 4/3/19 by DJ - added parent function callable from Python (not command l
 Updated 4/4/19 by DJ - added tight layout to plots to avoid overlapping labels
 Updated 4/18/19 by DJ - changed efficiency metric to match Henson, 2007, 
   changed default microtime to 1.
+Updated 4/26/19 by DJ - renamed to effigenia, fixed defaults when few params are given
 """
 
 # ==== Import packages ==== #
@@ -569,9 +570,13 @@ def EvaluateTaskTiming(evFiles,evNames=[],conFile='',fileType='',afniDir='./',
     """ 
     
     # Declare defaults
-    if len(evNames)==0: # set event names to event timing filenames
-        evNames = [os.path.splitext(os.path.basename(fname))[0] for fname in evFiles];
-        
+    if len(evNames)==0: # if event names aren't given
+        if fileType == "fsl_design": # set to ev##, where ## is the index of the event.
+            M = LoadFslDesignFile(evFiles[0])
+            evNames = ['ev%02d'%x for x in range(M.shape[1])]
+        else: # set event names to event timing filenames
+            evNames = [os.path.splitext(os.path.basename(fname))[0] for fname in evFiles];
+            
     if len(conFile)==0: # set to be one contrast for each event type
         cInput = np.eye(len(evNames)); # assume each EV is a contrast
     else:
@@ -630,6 +635,9 @@ def EvaluateTaskTiming(evFiles,evNames=[],conFile='',fileType='',afniDir='./',
         if skipHrf:
             design,_ = ConvertToTimecourses(allTimings,Nvols,TR,microtime=TR,eventTypes=evNames);
         else:
+            if Nvols==0: # if Nvols wasn't provided, use the offset time of the last event
+                Nvols = int((allTimings.onset.values[-1]+allTimings.duration.values[-1])/TR)
+                print('Inferring Nvols=%d, offset time of last event...'%Nvols)
             design,_ = ConvolveHRF(allTimings,Nvols,TR,microtime=0.1,eventTypes=evNames);
         M = design[:,:-1] # exclude constant term
       

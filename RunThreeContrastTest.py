@@ -3,13 +3,14 @@
 """
 RunThreeContrastTest.py
 
-Test EvaluateTaskTiming's % BOLD signal required metric using two boxcar 
+Test effigenia's % BOLD signal required metric using two boxcar 
 regressors with varying rest periods, and three contrasts between them, as 
 described in (Smith, 2007; Fig. 4).
 * Note that the HRF and high-pass filter used in EvaluateTaskTiming do not 
   match Smith's exactly, so there will be some differences in the results.
 
 -Created 4/5/19 by DJ.
+-Updated 4/26/19 by DJ - changed EvaluateTaskTiming.py name to effigenia
 """
 
 # %% Import Packages
@@ -17,7 +18,7 @@ import numpy as np
 import pandas as pd
 import os
 from matplotlib import pyplot as plt
-from EvaluateTaskTiming import EvaluateTaskTiming
+from effigenia import EvaluateTaskTiming
 afniDir='/Users/jangrawdc/abin' # modify to point to AFNI directory on your computer!
 
 

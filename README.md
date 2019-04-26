@@ -1,4 +1,4 @@
-# EvaluateTaskTiming
+# effigenia
 Evaluate a given set of event timings and contrasts for an fMRI task, using several metrics based on regressor independence and efficiency.
 
 Reads timing files (.1D) from AFNI or design (.mat) or timing (3-column .txt) 
@@ -11,7 +11,7 @@ files from FSL and evaluates them using 4 different metrics:
 Outputs the results as figures and a single-row text file for comparison across
 task designs.
 
-See python EvaluateTaskTiming.py -h for command-line usage and input information, or import and use the EvaluateTaskTiming function as in RunSingleBoxcarTest.py.
+See python effigenia -h for command-line usage and input information, or import and use the EvaluateTaskTiming function as in RunSingleBoxcarTest.py.
 
 Samples of all three timing file types can be found in the SampleTimingFiles folder.
 
