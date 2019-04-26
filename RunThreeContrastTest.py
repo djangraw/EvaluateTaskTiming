@@ -18,7 +18,11 @@ import numpy as np
 import pandas as pd
 import os
 from matplotlib import pyplot as plt
-from effigenia import EvaluateTaskTiming
+# import effigenia's functions even though file doesn't end in .py
+import imp
+eff = imp.load_source('effigenia', './effigenia')
+
+# Declare constants
 afniDir='/Users/jangrawdc/abin' # modify to point to AFNI directory on your computer!
 
 
@@ -73,7 +77,7 @@ for i,tRest in enumerate(tRests):
 
     # Evaluate timing
     print('***** tRest=%d *****'%tRest)
-    _,_,_,B = EvaluateTaskTiming(evFiles=["01_ev1.1D","02_ev2.1D"],evNames=["ev1","ev2"],conFile="00_conFile.txt",
+    _,_,_,B = eff.EvaluateTaskTiming(evFiles=["01_ev1.1D","02_ev2.1D"],evNames=["ev1","ev2"],conFile="00_conFile.txt",
                                  fileType='afni_timing',afniDir=afniDir, runTime=tRun,TR=TR,
                                  tCrit=tCrit,outFile='',outImagePrefix=outImagePrefix,
                                  hpfCutoff=hpfCutoff,partMethod=partMethod)

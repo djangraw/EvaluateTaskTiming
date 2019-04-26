@@ -22,7 +22,11 @@ import numpy as np
 import pandas as pd
 import os
 from matplotlib import pyplot as plt
-from effigenia import EvaluateTaskTiming, LoadAfniTimingFile, ConvolveHRF, ApplyButterFilter, GetDesignEfficiency
+# import effigenia's functions even though file doesn't end in .py
+import imp
+eff = imp.load_source('effigenia', './effigenia')
+
+# Declare constants
 afniDir='/Users/jangrawdc/abin' # modify to point to AFNI directory on your computer!
 # Specify where images should be saved
 outDir='HensonEfficiencyTest' 
@@ -88,7 +92,7 @@ for i in range(nDesigns):
                     
         # Evaluate timing
         print('*** version %d, iter %d ***'%(i,j))
-        _,_,E,_ = EvaluateTaskTiming(evFiles=['01_ev1.1D'],fileType='afni_timing',afniDir=afniDir,
+        _,_,E,_ = eff.EvaluateTaskTiming(evFiles=['01_ev1.1D'],fileType='afni_timing',afniDir=afniDir,
                             runTime=runTime,TR=TR,outFile='',outImagePrefix='',
                             hpfCutoff=hpfCutoff)
 
@@ -181,7 +185,7 @@ for i in range(nDesigns):
     allTimings = pd.DataFrame({'trial_type':[],'onset':[],'duration':[]});
     for j,fname in enumerate(evFiles):        
         # Import timing file for one event type
-        timings,nRuns = LoadAfniTimingFile(fname,runTime,afniDir);
+        timings,nRuns = eff.LoadAfniTimingFile(fname,runTime,afniDir);
         # add event names
         timings['trial_type'] = evNames[j]
         # add this event type's info to dataframe
@@ -192,7 +196,7 @@ for i in range(nDesigns):
     
     # Convolve event times with HRF and sample at TRs
     Nvols = int(runTime*nRuns/TR);
-    design,_ = ConvolveHRF(allTimings,Nvols,TR,eventTypes=evNames);
+    design,_ = eff.ConvolveHRF(allTimings,Nvols,TR,eventTypes=evNames);
     M = design[:,:-1] # exclude constant term
     
     # Plot design        
@@ -208,13 +212,12 @@ for i in range(nDesigns):
             
     # apply HPF
     if hpfCutoff>0:
-        Mfilt = ApplyButterFilter(M,1./hpfCutoff, fs=1./TR, btype='high',order=filterOrder)
+        Mfilt = eff.ApplyButterFilter(M,1./hpfCutoff, fs=1./TR, btype='high',order=filterOrder)
     else:
         Mfilt = M;
         
     # Use contrast to calculate efficiency
-    E = GetDesignEfficiency(Mfilt,C)
-    E = GetDesignEfficiency(M,C)
+    E = eff.GetDesignEfficiency(Mfilt,C)
     
     corrVal = np.corrcoef(Mfilt[:,0],Mfilt[:,1])
 
@@ -312,7 +315,7 @@ for i in range(nDesigns):
     allTimings = pd.DataFrame({'trial_type':[],'onset':[],'duration':[]});
     for j,fname in enumerate(evFiles):        
         # Import timing file for one event type
-        timings,nRuns = LoadAfniTimingFile(fname,runTime,afniDir);
+        timings,nRuns = eff.LoadAfniTimingFile(fname,runTime,afniDir);
         # add event names
         timings['trial_type'] = evNames[j]
         # add this event type's info to dataframe
@@ -323,7 +326,7 @@ for i in range(nDesigns):
     
     # Convolve event times with HRF and sample at TRs
     Nvols = int(runTime*nRuns/TR);
-    design,_ = ConvolveHRF(allTimings,Nvols,TR,eventTypes=evNames);
+    design,_ = eff.ConvolveHRF(allTimings,Nvols,TR,eventTypes=evNames);
     M = design[:,:-1] # exclude constant term
     
     # Plot design        
@@ -339,13 +342,12 @@ for i in range(nDesigns):
             
     # apply HPF
     if hpfCutoff>0:
-        Mfilt = ApplyButterFilter(M,1./hpfCutoff, fs=1./TR, btype='high',order=filterOrder)
+        Mfilt = eff.ApplyButterFilter(M,1./hpfCutoff, fs=1./TR, btype='high',order=filterOrder)
     else:
         Mfilt = M;
         
     # Use contrast to calculate efficiency
-    E = GetDesignEfficiency(Mfilt,C)
-    E = GetDesignEfficiency(M,C)
+    E = eff.GetDesignEfficiency(Mfilt,C)
     
     corrVal = np.corrcoef(Mfilt[:,0],Mfilt[:,1])
 
